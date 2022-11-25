@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Students {
     private List <Student> StudentList;
@@ -77,6 +78,7 @@ public class Students {
         }
     }
 
+    // выводит имена студентов в алфавитном порядке
     public void PrintAlphabeticalNames(){
          this.StudentList.stream()
                  .sorted(Comparator.comparing(s -> s.full_name))
@@ -93,5 +95,33 @@ public class Students {
                     return true;
                 })
                 .forEach(s -> System.out.println(s.full_name));
+    }
+
+    // возвращает лист студентов учебного заведения Str
+    public List<Student> getStudentsFromUniversity(String Str){
+
+         return this.StudentList.stream()
+                 .filter(student -> student.educational_institution.equals(Str))
+                 .collect(Collectors.toList());
+    }
+
+    // заменяет поле учебного заведения студента c указанным именем пустой строкой
+    public void remandStudents(String Str){
+         this.StudentList = this.StudentList.stream()
+                 .map(student -> {if(student.full_name.equals(Str))
+                     student.educational_institution = "";
+                     return student;
+                 }).collect(Collectors.toList());
+    }
+
+    // удаляет изх списка студентов тех, у кого не указан университет
+    public void deleteStudentsWithoutUniversity(){
+        this.StudentList = this.StudentList.stream().toList()
+                .stream().filter(student -> {
+                    if(!student.educational_institution.equals(""))
+                        return true;
+                    else return false;
+                }).collect(Collectors.toList());
+
     }
 }
